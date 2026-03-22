@@ -1,0 +1,687 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coloring Worlds — Light RPG Coloring Books</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --ink:      #1a1035;
+      --cream:    #fffdf5;
+      --rose:     #f25c8b;
+      --gold:     #f5c842;
+      --teal:     #3ecfc1;
+      --violet:   #9b6ee8;
+      --sky:      #5bb8f5;
+      --coral:    #ff7c5c;
+      --mint:     #6ddba8;
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+ 
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.5;
+    }
+ 
+    /* ── SPLASH BLOBS (background decoration) ── */
+    .blobs {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 { width:520px; height:520px; background:var(--rose);   top:-120px; left:-100px; animation-delay:0s; }
+    .blob-2 { width:400px; height:400px; background:var(--teal);   top:30%;    right:-80px; animation-delay:-5s; }
+    .blob-3 { width:450px; height:450px; background:var(--violet); bottom:-80px; left:30%; animation-delay:-9s; }
+    .blob-4 { width:300px; height:300px; background:var(--gold);   top:60%;    left:-60px; animation-delay:-3s; }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+ 
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(255,253,245,0.82);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px dashed rgba(155,110,232,0.2);
+    }
+    .nav-logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--violet);
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-weight: 700; font-size: 0.9rem;
+      text-decoration: none; color: var(--ink);
+      letter-spacing: 0.03em;
+      padding: 0.3rem 0;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--rose);
+      transform: scaleX(0);
+      transition: transform 0.25s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+ 
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+    }
+ 
+    .hero-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 800; font-size: 0.78rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      box-shadow: 3px 3px 0 var(--ink);
+      animation: pop-in 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+ 
+    .hero h1 {
+      font-family: 'Lilita One', cursive;
+      font-size: clamp(3.2rem, 9vw, 7rem);
+      line-height: 1.0;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      animation: slide-up 0.7s 0.1s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+ 
+    .hero h1 .word-color {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--rose), var(--violet), var(--sky));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 .word-worlds {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--teal), var(--mint), var(--gold));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+ 
+    .hero-sub {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--coral);
+      margin-bottom: 1.8rem;
+      animation: slide-up 0.7s 0.2s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+ 
+    .hero-desc {
+      max-width: 600px;
+      font-size: 1.15rem; line-height: 1.7;
+      color: #4a3f6b;
+      margin-bottom: 2.5rem;
+      animation: slide-up 0.7s 0.3s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+ 
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: slide-up 0.7s 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+ 
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 3px solid var(--ink);
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--ink); }
+    .btn-primary { background: var(--rose); color: white; }
+    .btn-secondary { background: var(--cream); color: var(--ink); }
+ 
+    /* floating doodles */
+    .doodle {
+      position: absolute;
+      font-size: 2.5rem;
+      animation: float 4s ease-in-out infinite alternate;
+      user-select: none; pointer-events: none;
+    }
+    .d1 { top: 15%; left: 8%;  animation-delay: 0s;   }
+    .d2 { top: 25%; right: 9%; animation-delay: -1.2s; }
+    .d3 { bottom: 22%; left: 6%;  animation-delay: -2.4s; }
+    .d4 { bottom: 18%; right: 7%; animation-delay: -0.8s; }
+    @keyframes float {
+      from { transform: translateY(0) rotate(-5deg); }
+      to   { transform: translateY(-18px) rotate(5deg); }
+    }
+ 
+    /* scroll arrow */
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+      color: #9b8bb4;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .scroll-hint span { font-size: 1.4rem; }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+ 
+    /* ── SECTION WRAPPER ── */
+    section {
+      position: relative; z-index: 1;
+      padding: 6rem 2rem;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+ 
+    .section-label {
+      display: inline-block;
+      font-weight: 800; font-size: 0.78rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Lilita One', cursive;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+ 
+    /* ── WHAT IS A LIGHT RPG COLORING BOOK ── */
+    .what-section {
+      background: var(--ink);
+      color: var(--cream);
+      clip-path: polygon(0 4%, 100% 0%, 100% 96%, 0% 100%);
+      padding: 8rem 2rem;
+    }
+    .what-section .section-label { color: var(--gold); }
+    .what-section .section-title { color: var(--cream); }
+ 
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .pillar {
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .pillar:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,0.1);
+    }
+    .pillar-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+    .pillar h3 {
+      font-family: 'Lilita One', cursive;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .pillar p { font-size: 0.95rem; line-height: 1.6; color: #c8bfe8; }
+    .pillar-1 h3 { color: var(--rose); }
+    .pillar-2 h3 { color: var(--teal); }
+    .pillar-3 h3 { color: var(--gold); }
+    .pillar-4 h3 { color: var(--sky); }
+ 
+    /* ── FEATURED PROJECT ── */
+    .featured-section { background: var(--cream); }
+ 
+    .project-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      background: white;
+      border: 3px solid var(--ink);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 10px 10px 0 var(--ink);
+      margin-top: 3rem;
+    }
+    .project-art {
+      background: linear-gradient(135deg, #1a1035 0%, #3a1f6e 40%, #1e3d5c 100%);
+      min-height: 380px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-art::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(155,110,232,0.3), transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(62,207,193,0.2), transparent 50%);
+    }
+    .project-art-crown { font-size: 4rem; position: relative; z-index:1; animation: float 3s ease-in-out infinite alternate; }
+    .project-art-title {
+      font-family: 'Lilita One', cursive;
+      font-size: 1.8rem;
+      color: white;
+      text-align: center;
+      position: relative; z-index: 1;
+      line-height: 1.2;
+    }
+    .project-art-sub {
+      font-size: 0.9rem; color: #a89fd4;
+      position: relative; z-index: 1;
+      letter-spacing: 0.05em;
+    }
+    .stat-pills {
+      display: flex; gap: 0.6rem; position: relative; z-index:1;
+    }
+    .stat-pill {
+      font-size: 0.75rem; font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+    .sp-grace  { background: rgba(245,200,66,0.2);  color: var(--gold);  border: 1.5px solid var(--gold); }
+    .sp-shadow { background: rgba(155,110,232,0.2); color: #c4a8ff;      border: 1.5px solid #9b6ee8; }
+    .sp-fate   { background: rgba(242,92,139,0.2);  color: #ff9dbf;      border: 1.5px solid var(--rose); }
+ 
+    .project-info { padding: 2.5rem 2.5rem 2.5rem 0; }
+    .project-phase {
+      display: inline-block;
+      background: var(--teal);
+      color: var(--ink);
+      font-size: 0.75rem; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .project-info h3 {
+      font-family: 'Lilita One', cursive;
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .project-info p {
+      font-size: 1rem; line-height: 1.7;
+      color: #4a3f6b;
+      margin-bottom: 1.2rem;
+    }
+    .feature-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .feature-list li {
+      font-size: 0.95rem; font-weight: 600;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .feature-list li::before { content: '✦'; color: var(--violet); }
+ 
+    /* ── COMING SOON ── */
+    .coming-section {
+      background: linear-gradient(135deg, #fef9ec, #f0eaff);
+      clip-path: polygon(0 0, 100% 4%, 100% 100%, 0 96%);
+      padding: 9rem 2rem;
+    }
+    .coming-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .coming-card {
+      background: white;
+      border: 2.5px solid var(--ink);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 6px 6px 0 var(--ink);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .coming-card:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
+    .coming-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    }
+    .cc-1::before { background: linear-gradient(90deg, var(--rose), var(--coral)); }
+    .cc-2::before { background: linear-gradient(90deg, var(--teal), var(--sky)); }
+    .cc-3::before { background: linear-gradient(90deg, var(--violet), var(--rose)); }
+    .coming-soon-tag {
+      display: inline-block;
+      font-size: 0.7rem; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: #f0eaff; color: var(--violet);
+      padding: 0.25rem 0.7rem; border-radius: 999px;
+      margin-bottom: 0.8rem;
+    }
+    .coming-card h3 {
+      font-family: 'Lilita One', cursive;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .coming-card p { font-size: 0.92rem; line-height: 1.6; color: #5a4f7a; }
+ 
+    /* ── CONTACT ── */
+    .contact-section {
+      background: var(--cream);
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+    .contact-card {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--cream);
+      border-radius: 28px;
+      padding: 3.5rem 4rem;
+      box-shadow: 12px 12px 0 var(--violet);
+      max-width: 580px;
+      width: 100%;
+    }
+    .contact-card .section-title { color: var(--cream); margin-bottom: 0.8rem; }
+    .contact-card p { color: #c8bfe8; font-size: 1rem; line-height: 1.7; margin-bottom: 1.8rem; }
+    .email-display {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      color: var(--teal);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: background 0.2s;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .email-display:hover { background: rgba(255,255,255,0.15); }
+ 
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: #6b5f8a;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    footer span { color: var(--rose); }
+    footer a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    footer a:hover { text-decoration: underline; }
+ 
+    /* ── ANIMATIONS ── */
+    @keyframes pop-in {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes slide-up {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+ 
+    /* fade-in on scroll via IntersectionObserver */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+ 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .project-card { grid-template-columns: 1fr; }
+      .project-art  { min-height: 260px; }
+      .project-info { padding: 2rem; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .contact-card { padding: 2.5rem 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+ 
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Coloring Worlds</div>
+    <ul class="nav-links">
+      <li><a href="#what">What is it?</a></li>
+      <li><a href="#project">Projects</a></li>
+      <li><a href="#coming">Coming Soon</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+ 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="doodle d1">🎨</div>
+    <div class="doodle d2">✨</div>
+    <div class="doodle d3">🐉</div>
+    <div class="doodle d4">📖</div>
+ 
+    <div class="hero-badge">✦ Welcome to the Studio ✦</div>
+ 
+    <h1>
+      <span class="word-color">Coloring</span><br>
+      <span class="word-worlds">Worlds</span>
+    </h1>
+ 
+    <p class="hero-sub">Where your colors write the story</p>
+ 
+    <p class="hero-desc">
+      Imagine a coloring book that actually responds to your choices.
+      Color your way through gothic kingdoms, build hidden stats, and unlock
+      branching endings — all with your favorite colored pencils (or digital brush).
+    </p>
+ 
+    <div class="hero-ctas">
+      <a href="#project" class="btn btn-primary">🏰 See Kingdoms of Color</a>
+      <a href="#what" class="btn btn-secondary">✦ Learn more</a>
+    </div>
+ 
+    <div class="scroll-hint">
+      SCROLL
+      <span>↓</span>
+    </div>
+  </section>
+ 
+  <!-- WHAT IS A LIGHT RPG COLORING BOOK -->
+  <section class="what-section" id="what">
+    <div class="container">
+      <span class="section-label reveal">✦ The Concept</span>
+      <h2 class="section-title reveal">What's a Light RPG<br>Coloring Book?</h2>
+      <p class="reveal" style="color:#c8bfe8; font-size:1.1rem; line-height:1.7; max-width:620px;">
+        It's a coloring book where every color you choose secretly matters.
+        No dice. No rulebook. Just your creative instincts guiding a story
+        toward one of several unique endings.
+      </p>
+ 
+      <div class="pillars">
+        <div class="pillar reveal">
+          <div class="pillar-icon">🎨</div>
+          <h3 class="pillar-1">Color Freely</h3>
+          <p>Choose any colors you love — each palette family secretly influences your character's hidden stats as you play.</p>
+        </div>
+        <div class="pillar reveal">
+          <div class="pillar-icon">⚔️</div>
+          <h3 class="pillar-2">Build Hidden Stats</h3>
+          <p>Three invisible forces — Grace, Shadow, and Fate — shift with every choice. You won't know exactly where you stand until the end.</p>
+        </div>
+        <div class="pillar reveal">
+          <div class="pillar-icon">📖</div>
+          <h3 class="pillar-3">Story That Responds</h3>
+          <p>Chapters unfold like illustrated storybooks. Your color choices shape the narrative and unlock different scenes.</p>
+        </div>
+        <div class="pillar reveal">
+          <div class="pillar-icon">🌟</div>
+          <h3 class="pillar-4">Multiple Endings</h3>
+          <p>Replay and recolor to discover every path. Each ending rewards a completely different creative approach.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- FEATURED PROJECT -->
+  <section class="featured-section" id="project">
+    <div class="container">
+      <span class="section-label reveal">✦ First Release</span>
+      <h2 class="section-title reveal">Featured Project</h2>
+ 
+      <div class="project-card reveal">
+        <div class="project-art">
+          <div class="project-art-crown">👑</div>
+          <div class="project-art-title">Kingdoms of Color<br><span style="font-size:1rem; font-family:'Nunito',sans-serif; font-weight:600;">The Dragon of Thornfield</span></div>
+          <div class="project-art-sub">A Gothic Medieval Fantasy</div>
+          <div class="stat-pills">
+            <span class="stat-pill sp-grace">✦ Grace</span>
+            <span class="stat-pill sp-shadow">◆ Shadow</span>
+            <span class="stat-pill sp-fate">● Fate</span>
+          </div>
+        </div>
+ 
+        <div class="project-info">
+          <span class="project-phase">🎨 In Development</span>
+          <h3>The Dragon of Thornfield</h3>
+          <p>
+            In the kingdom of Thornvale, a dragon stirs beneath the ancient mountain.
+            You are Elara — and how you color your journey determines whether
+            Varathos becomes destroyer, ally, or legend.
+          </p>
+          <ul class="feature-list">
+            <li>6 illustrated chapters to color</li>
+            <li>5 unique characters with storylines</li>
+            <li>3 stat paths: Grace · Shadow · Fate</li>
+            <li>3 branching endings to unlock</li>
+            <li>Playable digitally (WebGL) or as PDF</li>
+          </ul>
+          <a href="https://kingdomsofcolor.netlify.app/" target="_blank" class="btn btn-primary">
+            🏰 Visit the Project Hub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- COMING SOON -->
+  <section class="coming-section" id="coming">
+    <div class="container">
+      <span class="section-label reveal">✦ On the Horizon</span>
+      <h2 class="section-title reveal">More Worlds<br>Are Coming</h2>
+      <p class="reveal" style="font-size:1.05rem; line-height:1.7; color:#4a3f6b; max-width:560px;">
+        Kingdoms of Color is just the beginning. Coloring Worlds is building
+        a whole library of Light RPG coloring books — each one a new world,
+        a new mechanic, a new story to color into life.
+      </p>
+ 
+      <div class="coming-grid">
+        <div class="coming-card cc-1 reveal">
+          <span class="coming-soon-tag">Coming Soon</span>
+          <h3>🌊 Tides of Aethermoor</h3>
+          <p>An ocean adventure where your color palette shapes the moods of the sea and the fates of its sailors.</p>
+        </div>
+        <div class="coming-card cc-2 reveal">
+          <span class="coming-soon-tag">Concept Stage</span>
+          <h3>🌸 The Enchanted Apothecary</h3>
+          <p>Color magical ingredients, brew impossible potions, and determine the fate of a whimsical village in need.</p>
+        </div>
+        <div class="coming-card cc-3 reveal">
+          <span class="coming-soon-tag">Dream Stage</span>
+          <h3>⭐ Your World Here</h3>
+          <p>Have a world you'd love to see as a Light RPG coloring book? Every great world starts as a spark of imagination.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-card reveal">
+      <span class="section-label" style="color:var(--gold)">✦ Say Hello</span>
+      <h2 class="section-title">Let's Connect</h2>
+      <p>Questions about the project? Want to follow along on the journey? I'd love to hear from you.</p>
+      <a href="mailto:coloryourworld@coloringworlds.net" class="email-display">
+        ✉️ &nbsp;coloryourworld@coloringworlds.net
+      </a>
+      <a href="https://kingdomsofcolor.netlify.app/" target="_blank" class="btn btn-secondary" style="width:100%; justify-content:center; background:rgba(255,255,255,0.08); color:var(--cream); border-color:rgba(255,255,255,0.3);">
+        🏰 Visit the Kingdoms of Color Hub
+      </a>
+    </div>
+  </section>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <p>Made with <span>♥</span> by Coloring Worlds &nbsp;·&nbsp; <a href="mailto:coloryourworld@coloringworlds.net">coloryourworld@coloringworlds.net</a></p>
+    <p style="margin-top:0.4rem;">© 2026 Coloring Worlds · All rights reserved</p>
+  </footer>
+ 
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+ 
+</body>
+</html>
